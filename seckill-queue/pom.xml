@@ -16,9 +16,20 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<seckill-common.version>1.0-SNAPSHOT</seckill-common.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.yzxie.study</groupId>
+			<artifactId>seckill-common</artifactId>
+			<version>${seckill-common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
@@ -48,6 +59,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.58</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

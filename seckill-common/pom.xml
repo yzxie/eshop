@@ -11,5 +11,7 @@
 
     <artifactId>seckill-common</artifactId>
 
+    <dependencies>
 
+    </dependencies>
 </project>
