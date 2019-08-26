@@ -1,7 +1,10 @@
 package com.yzxie.study.seckillbiz.service;
 
 import com.yzxie.study.seckillbiz.queue.RabbitMqProducer;
+import com.yzxie.study.seckillbiz.repository.SecKillRedisDAO;
 import com.yzxie.study.seckillcommon.bo.Order;
+import com.yzxie.study.seckillcommon.bo.OrderStatus;
+import com.yzxie.study.seckillcommon.constant.RedisConst;
 import com.yzxie.study.seckillcommon.rpc.IOrderRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class OrderRpcServiceImpl implements IOrderRpcService {
 
     @Autowired
     private RabbitMqProducer rabbitMqProducer;
+
+    @Autowired
+    private SecKillRedisDAO secKillRedisDAO;
 
     /**
      * 秒杀订单处理线程池
@@ -46,8 +52,14 @@ public class OrderRpcServiceImpl implements IOrderRpcService {
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                // todo 检查是否还有库存，如果有则发送到队列
-                rabbitMqProducer.send(order);
+                // 检查是否还有库存，如果有则发送到队列
+                long remaindNum = secKillRedisDAO.descValueWithLua(RedisConst.SECKILL_NUMBER_KEY_PREFIX + productId, 1);
+                if (remaindNum > 0) {
+                    rabbitMqProducer.send(order);
+                } else {
+                    // 直接返回抢购失败
+                    secKillRedisDAO.setSeckillResult(productId, uuid, OrderStatus.FAILURE);
+                }
             }
         };
         createOrderThreadPool.execute(task);

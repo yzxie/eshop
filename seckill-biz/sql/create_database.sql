@@ -1,0 +1,1 @@
+create database seckill default character set utf8;
