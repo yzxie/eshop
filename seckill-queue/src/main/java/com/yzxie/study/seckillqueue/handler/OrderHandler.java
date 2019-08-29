@@ -42,7 +42,6 @@ public class OrderHandler {
                     // 更新缓存和数据库的库存数量
 
                     // 设置下单结果
-
                 }
             });
         } catch (Exception e) {
