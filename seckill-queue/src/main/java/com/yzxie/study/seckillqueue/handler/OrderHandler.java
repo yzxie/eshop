@@ -45,7 +45,6 @@ public class OrderHandler {
 
                 }
             });
-
         } catch (Exception e) {
             logger.error("createOrder {}", JSON.toJSONString(order), e);
         }
