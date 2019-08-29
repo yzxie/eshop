@@ -1,7 +1,8 @@
 package com.yzxie.study.seckillbiz.service;
 
 import com.yzxie.study.seckillbiz.queue.RabbitMqProducer;
-import com.yzxie.study.seckillbiz.repository.SecKillRedisDAO;
+import com.yzxie.study.seckillbiz.cache.RedisCache;
+import com.yzxie.study.seckillbiz.repository.SeckillNumDAO;
 import com.yzxie.study.seckillcommon.bo.Order;
 import com.yzxie.study.seckillcommon.bo.OrderStatus;
 import com.yzxie.study.seckillcommon.constant.RedisConst;
@@ -25,7 +26,10 @@ public class OrderRpcServiceImpl implements IOrderRpcService {
     private RabbitMqProducer rabbitMqProducer;
 
     @Autowired
-    private SecKillRedisDAO secKillRedisDAO;
+    private RedisCache redisCache;
+
+    @Autowired
+    private SeckillNumDAO seckillNumDAO;
 
     /**
      * 秒杀订单处理线程池
@@ -53,17 +57,17 @@ public class OrderRpcServiceImpl implements IOrderRpcService {
             @Override
             public void run() {
                 // 检查是否还有库存，如果有则发送到队列
-                long remaindNum = secKillRedisDAO.descValueWithLua(RedisConst.SECKILL_NUMBER_KEY_PREFIX + productId, 1);
-                if (remaindNum > 0) {
+                long remainNum = redisCache.descValueWithLua(RedisConst.SECKILL_NUMBER_KEY_PREFIX + productId,
+                        1, productId);
+                if (remainNum > 0) {
                     rabbitMqProducer.send(order);
                 } else {
                     // 直接返回抢购失败
-                    secKillRedisDAO.setSeckillResult(productId, uuid, OrderStatus.FAILURE);
+                    redisCache.setSeckillResult(productId, uuid, OrderStatus.FAILURE);
                 }
             }
         };
         createOrderThreadPool.execute(task);
-
         return orderId;
     }
 }

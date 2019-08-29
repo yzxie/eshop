@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  * Description:
  **/
 @Repository
-public interface ProductDAO {
+public interface OrderDAO {
+
 }

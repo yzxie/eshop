@@ -6,6 +6,7 @@ import com.yzxie.study.seckillqueue.repository.OrderDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -23,22 +24,28 @@ public class OrderHandler {
 
     @Autowired
     private TransactionTemplate transactionTemplate;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Autowired
     private OrderDAO orderDAO;
+
 
     public void createOrder(Order order) {
         try {
             transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    // 检查是否存在库存
-
                     // 插入记录数据库
 
-                    // 更新缓存的库存数量
+                    // 更新缓存和数据库的库存数量
+
+                    // 设置下单结果
 
                 }
             });
+
         } catch (Exception e) {
             logger.error("createOrder {}", JSON.toJSONString(order), e);
         }
