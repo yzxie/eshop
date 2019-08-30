@@ -1,0 +1,1 @@
+create database eshop default character set utf8;

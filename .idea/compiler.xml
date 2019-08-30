@@ -6,18 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="seckill-api" />
-        <module name="seckill-biz" />
-        <module name="seckill-common" />
-        <module name="seckill-queue" />
+        <module name="eshop-api" />
+        <module name="eshop-common" />
+        <module name="eshop-queue" />
+        <module name="eshop-biz" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="seckill-api" options="-parameters" />
-      <module name="seckill-biz" options="-parameters" />
-      <module name="seckill-queue" options="-parameters" />
+      <module name="eshop-api" options="-parameters" />
+      <module name="eshop-biz" options="-parameters" />
+      <module name="eshop-queue" options="-parameters" />
     </option>
   </component>
 </project>

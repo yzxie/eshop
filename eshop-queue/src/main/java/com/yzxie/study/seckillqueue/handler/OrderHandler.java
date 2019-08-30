@@ -39,9 +39,12 @@ public class OrderHandler {
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                     // 插入记录数据库
 
-                    // 更新缓存和数据库的库存数量
+                    // 更新数据库的库存数量
+
+                    // 更新缓存的库存数量
 
                     // 设置下单结果
+
                 }
             });
         } catch (Exception e) {
