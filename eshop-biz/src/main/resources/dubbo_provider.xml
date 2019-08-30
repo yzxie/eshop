@@ -16,6 +16,6 @@
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" />
 
     <!-- 声明需要暴露的服务接口 -->
-    <bean id="orderRpcService" class="com.yzxie.study.seckillbiz.service.OrderRpcServiceImpl" />
-    <dubbo:service interface="com.yzxie.study.seckillcommon.rpc.IOrderRpcService" ref="orderRpcService" />
+    <bean id="orderRpcService" class="com.yzxie.study.eshopbiz.service.OrderRpcServiceImpl" />
+    <dubbo:service interface="com.yzxie.study.eshopcommon.rpc.IOrderRpcService" ref="orderRpcService" />
 </beans>

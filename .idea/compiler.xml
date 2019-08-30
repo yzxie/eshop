@@ -2,14 +2,16 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eshop-api" />
         <module name="eshop-common" />
-        <module name="eshop-queue" />
         <module name="eshop-biz" />
+        <module name="eshop-test" />
+        <module name="eshop-queue" />
       </profile>
     </annotationProcessing>
   </component>
