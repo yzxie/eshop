@@ -35,18 +35,26 @@ import java.util.concurrent.TimeUnit;
 @Order(1)
 // Order序号越小，优先级越高
 public class FlowLimitAspect {
-
+    /**
+     * url维度限流
+     */
     private Map<String, RateLimiter> uriLimiterMap = new HashMap<>();
 
+    /**
+     * 用户维度限流
+     */
     private LoadingCache<String, RateLimiter> userLimiterMap;
 
     @Autowired
     private Environment environment;
 
-    // @Value("flow.uuid.limit")
+    /**
+     * 用户每秒可发送请求数
+     */
     private String uuidLimit;
-
-    // @Value("flow.uris")
+    /**
+     * 需要限流的uri
+     */
     private String uriList;
 
     @PostConstruct
@@ -86,17 +94,17 @@ public class FlowLimitAspect {
             String uri = request.getRequestURI();
             String userId = request.getHeader("userId");
             RateLimiter uriLimiter = uriLimiterMap.get(uri);
-            // uri
+            // uri：url维度限流
             if (uriLimiter != null) {
                 boolean allow = uriLimiter.tryAcquire();
                 if (!allow) {
                     throw new ApiException("抢购人数太多，请稍后再试");
                 }
             }
-            // uuid
+            // useId：用户维度限流
             if (userId != null) {
-                RateLimiter uuidLimiter = userLimiterMap.get(userId);
-                boolean allow = uuidLimiter.tryAcquire();
+                RateLimiter userLimiter = userLimiterMap.get(userId);
+                boolean allow = userLimiter.tryAcquire();
                 if (!allow) {
                     throw new ApiException("抢购人数太多，请稍后再试");
                 }

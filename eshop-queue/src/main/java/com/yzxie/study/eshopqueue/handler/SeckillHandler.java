@@ -10,7 +10,6 @@ import com.yzxie.study.eshopqueue.cache.RedisCache;
 import com.yzxie.study.eshopqueue.repository.OrderDAO;
 import com.yzxie.study.eshopqueue.repository.OrderItemDAO;
 import com.yzxie.study.eshopqueue.repository.ProductQuantityDAO;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +30,8 @@ import java.util.List;
  * Description:
  **/
 @Component
-public class OrderHandler {
-    private static final Logger logger = LoggerFactory.getLogger(OrderHandler.class);
+public class SeckillHandler {
+    private static final Logger logger = LoggerFactory.getLogger(SeckillHandler.class);
 
     @Autowired
     private TransactionTemplate transactionTemplate;

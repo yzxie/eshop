@@ -12,5 +12,5 @@
 
     <dubbo:registry protocol="${dubbo.registry.protocol}" address="${dubbo.registry.address}" />
 
-    <dubbo:reference id="orderRpcService" interface="com.yzxie.study.eshopcommon.rpc.IOrderRpcService" timeout="6000" check="false" />
+    <dubbo:reference id="seckillRpcService" interface="com.yzxie.study.eshopcommon.rpc.SeckillRpcService" timeout="6000" check="false" />
 </beans>

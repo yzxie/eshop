@@ -7,7 +7,7 @@ import com.yzxie.study.eshopcommon.dto.OrderDTO;
 import com.yzxie.study.eshopcommon.dto.OrderItemDTO;
 import com.yzxie.study.eshopcommon.dto.OrderResult;
 import com.yzxie.study.eshopcommon.dto.OrderStatus;
-import com.yzxie.study.eshopcommon.rpc.IOrderRpcService;
+import com.yzxie.study.eshopcommon.rpc.SeckillRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import java.util.UUID;
  * Description:
  **/
 @Service
-public class OrderRpcServiceImpl implements IOrderRpcService {
-    private static final Logger logger = LoggerFactory.getLogger(IOrderRpcService.class);
+public class SeckillRpcServiceImpl implements SeckillRpcService {
+    private static final Logger logger = LoggerFactory.getLogger(SeckillRpcService.class);
 
     @Autowired
     private RabbitMqProducer rabbitMqProducer;

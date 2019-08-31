@@ -1,7 +1,7 @@
 package com.yzxie.study.eshopqueue.queue;
 
 import com.yzxie.study.eshopcommon.dto.OrderDTO;
-import com.yzxie.study.eshopqueue.handler.OrderHandler;
+import com.yzxie.study.eshopqueue.handler.SeckillHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -23,11 +23,11 @@ public class RabbitMqConsumer {
     private static final Logger logger = LoggerFactory.getLogger(RabbitMqConsumer.class);
 
     @Autowired
-    private OrderHandler orderHandler;
+    private SeckillHandler seckillHandler;
 
     @RabbitHandler
     public void process(OrderDTO orderDTO) {
-        orderHandler.createOrder(orderDTO);
+        seckillHandler.createOrder(orderDTO);
         logger.info("order {}", orderDTO.getUuid());
     }
 }

@@ -3,7 +3,7 @@ package com.yzxie.study.eshopapi.controller;
 import com.yzxie.study.eshopapi.controller.param.OrderRequest;
 import com.yzxie.study.eshopapi.controller.param.OrderStatusRequest;
 import com.yzxie.study.eshopapi.limit.FlowLimit;
-import com.yzxie.study.eshopapi.service.OrderService;
+import com.yzxie.study.eshopapi.service.SeckillService;
 import com.yzxie.study.eshopcommon.dto.OrderResult;
 import com.yzxie.study.eshopcommon.result.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SecKillController {
 
     @Autowired
-    private OrderService orderService;
+    private SeckillService seckillService;
 
     @RequestMapping("/create")
     @ResponseBody
     @FlowLimit
     public ApiResponse create(@RequestBody OrderRequest orderRequest) {
-        OrderResult orderResult = orderService.createOrder(orderRequest.getProductId(), orderRequest.getNum(),
+        OrderResult orderResult = seckillService.createOrder(orderRequest.getProductId(), orderRequest.getNum(),
                 orderRequest.getPrice(), orderRequest.getUserId());
         return ApiResponse.success(orderResult);
     }
@@ -37,7 +37,7 @@ public class SecKillController {
     @RequestMapping("/check")
     @ResponseBody
     public ApiResponse checkOrder(@RequestBody OrderStatusRequest orderStatusRequest) {
-        OrderResult orderResult = orderService.checkOrderStatus(orderStatusRequest.getUserId(), orderStatusRequest.getOrderUuid());
+        OrderResult orderResult = seckillService.checkOrderStatus(orderStatusRequest.getUserId(), orderStatusRequest.getOrderUuid());
         return ApiResponse.success(orderResult);
     }
 }

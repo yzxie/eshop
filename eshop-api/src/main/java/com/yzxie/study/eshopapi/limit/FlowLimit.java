@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Date: 2019-08-25
  * Description:
  **/
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FlowLimit {
 }

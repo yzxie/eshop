@@ -1,4 +1,4 @@
-package com.yzxie.study.eshopapi.service;
+package com.yzxie.study.eshopcommon.rpc;
 
 import com.yzxie.study.eshopcommon.dto.OrderResult;
 
@@ -8,23 +8,23 @@ import com.yzxie.study.eshopcommon.dto.OrderResult;
  * Date: 2019-08-25
  * Description:
  **/
-public interface OrderService {
+public interface SeckillRpcService {
 
     /**
-     * 下单
+     * 发送订单到队列
      * @param productId
      * @param num
      * @param price
      * @param uuid
-     * @return
+     * @return 订单id
      */
-    OrderResult createOrder(long productId, int num, double price, String uuid);
+    OrderResult sendOrderToMq(long productId, int num, double price, String uuid);
 
     /**
      * 检查订单的状态
      * @param userId
-     * @param orderUuId
+     * @param orderUuid
      * @return
      */
-    OrderResult checkOrderStatus(String userId, String orderUuId);
+    int getOrderStatus(String userId, String orderUuid);
 }

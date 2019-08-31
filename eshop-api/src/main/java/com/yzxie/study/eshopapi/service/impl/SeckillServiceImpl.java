@@ -1,10 +1,9 @@
 package com.yzxie.study.eshopapi.service.impl;
 
-import com.yzxie.study.eshopapi.service.OrderService;
+import com.yzxie.study.eshopapi.service.SeckillService;
 import com.yzxie.study.eshopcommon.dto.OrderResult;
-import com.yzxie.study.eshopcommon.dto.OrderStatus;
 import com.yzxie.study.eshopcommon.exception.ApiException;
-import com.yzxie.study.eshopcommon.rpc.IOrderRpcService;
+import com.yzxie.study.eshopcommon.rpc.SeckillRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +16,17 @@ import org.springframework.stereotype.Service;
  * Description:
  **/
 @Service
-public class OrderServiceImpl implements OrderService {
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+public class SeckillServiceImpl implements SeckillService {
+    private static final Logger logger = LoggerFactory.getLogger(SeckillService.class);
 
     @Autowired
-    private IOrderRpcService orderRpcService;
+    private SeckillRpcService seckillRpcService;
 
     @Override
     public OrderResult createOrder(long productId, int num, double price, String uuid) {
         try {
             // RPC调用发送到队列
-            OrderResult orderResult = orderRpcService.sendOrderToMq(productId, num, price, uuid);
+            OrderResult orderResult = seckillRpcService.sendOrderToMq(productId, num, price, uuid);
             return orderResult;
         } catch (Exception e) {
             throw new ApiException("服务异常，请稍后再试");
@@ -38,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderResult checkOrderStatus(String userId, String orderUuId) {
         try {
             // RPC调用发送到队列
-            int orderStatus = orderRpcService.getOrderStatus(userId, orderUuId);
+            int orderStatus = seckillRpcService.getOrderStatus(userId, orderUuId);
             OrderResult result = new OrderResult(orderUuId, orderStatus);
             return result;
         } catch (Exception e) {
