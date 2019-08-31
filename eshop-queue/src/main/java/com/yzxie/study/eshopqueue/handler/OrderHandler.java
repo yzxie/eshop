@@ -87,6 +87,7 @@ public class OrderHandler {
             cost += (orderItemDTO.getNum() * orderItemDTO.getPrice());
             orderItemBO.setNum(orderItemDTO.getNum());
             orderItemBO.setPrice(orderItemDTO.getPrice());
+            orderItemBO.setCreateTime(new Date());
             orderItemBOList.add(orderItemBO);
         }
         orderBO.setCost(cost);

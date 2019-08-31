@@ -10,8 +10,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -37,26 +38,31 @@ public class FlowLimitAspect {
 
     private Map<String, RateLimiter> uriLimiterMap = new HashMap<>();
 
-    private LoadingCache<String, RateLimiter> uuidLimiterMap;
+    private LoadingCache<String, RateLimiter> userLimiterMap;
 
-    @Value("flow.uuid.limit")
+    @Autowired
+    private Environment environment;
+
+    // @Value("flow.uuid.limit")
     private String uuidLimit;
 
-    @Value("flow.uris")
+    // @Value("flow.uris")
     private String uriList;
 
     @PostConstruct
     public void init() {
+        this.uuidLimit = environment.getProperty("flow.uuid.limit");
+        this.uriList = environment.getProperty("flow.uris");
         // 初始化uri的limiter
         if (uriList != null) {
             String[] uris = uriList.split(",");
             for (String uri : uris) {
-                // 每个uri每秒最多接收10000个请求，也可以优化为每个uri不一样
-                uriLimiterMap.put(uri, RateLimiter.create(10000));
+                // 每个uri每秒最多接收10个请求，也可以优化为每个uri不一样
+                uriLimiterMap.put(uri, RateLimiter.create(10));
             }
         }
         // 初始化uuid的limiter
-        uuidLimiterMap = CacheBuilder.newBuilder()
+        userLimiterMap = CacheBuilder.newBuilder()
                 .maximumSize(10000)
                 .expireAfterWrite(1, TimeUnit.HOURS)
                 .build(new CacheLoader<String, RateLimiter>() {
@@ -78,7 +84,7 @@ public class FlowLimitAspect {
         if (flowLimit != null) {
             HttpServletRequest request = getCurrentRequest();
             String uri = request.getRequestURI();
-            String uuid = request.getHeader("uuid");
+            String userId = request.getHeader("userId");
             RateLimiter uriLimiter = uriLimiterMap.get(uri);
             // uri
             if (uriLimiter != null) {
@@ -88,8 +94,8 @@ public class FlowLimitAspect {
                 }
             }
             // uuid
-            if (uuid != null) {
-                RateLimiter uuidLimiter = uuidLimiterMap.get(uuid);
+            if (userId != null) {
+                RateLimiter uuidLimiter = userLimiterMap.get(userId);
                 boolean allow = uuidLimiter.tryAcquire();
                 if (!allow) {
                     throw new ApiException("抢购人数太多，请稍后再试");

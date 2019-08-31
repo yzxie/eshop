@@ -2,6 +2,7 @@ package com.yzxie.study.eshopapi.controller;
 
 import com.yzxie.study.eshopapi.controller.param.OrderRequest;
 import com.yzxie.study.eshopapi.controller.param.OrderStatusRequest;
+import com.yzxie.study.eshopapi.limit.FlowLimit;
 import com.yzxie.study.eshopapi.service.OrderService;
 import com.yzxie.study.eshopcommon.dto.OrderResult;
 import com.yzxie.study.eshopcommon.result.ApiResponse;
@@ -26,6 +27,7 @@ public class SecKillController {
 
     @RequestMapping("/create")
     @ResponseBody
+    @FlowLimit
     public ApiResponse create(@RequestBody OrderRequest orderRequest) {
         OrderResult orderResult = orderService.createOrder(orderRequest.getProductId(), orderRequest.getNum(),
                 orderRequest.getPrice(), orderRequest.getUserId());
