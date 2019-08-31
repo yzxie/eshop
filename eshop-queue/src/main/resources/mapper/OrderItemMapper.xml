@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yzxie.study.eshopqueue.repository.OrderItemDAO">
-
+    <sql id="baseColumns">
+        order_uuid, product_id, price, num, create_time
+    </sql>
+    <insert id="bulkInsert" parameterType="java.util.List">
+        insert into t_order_item (
+            <include refid="baseColumns"/>
+        ) values
+        <foreach collection="orderItems" item="item" index="index" open="(" separator=","  close=")">
+            #{item.orderUuid},
+            #{item.productId},
+            #{item.price},
+            #{item.num},
+            #{item.createTime}
+        </foreach>
+    </insert>
 </mapper>

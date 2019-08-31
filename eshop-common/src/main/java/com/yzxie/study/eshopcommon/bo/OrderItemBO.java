@@ -2,6 +2,8 @@ package com.yzxie.study.eshopcommon.bo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Author: xieyizun
  * Version: 1.0
@@ -10,5 +12,9 @@ import lombok.Data;
  **/
 @Data
 public class OrderItemBO {
-
+    private String orderUuid;
+    private long productId;
+    private double price;
+    private int num;
+    private Date createTime;
 }

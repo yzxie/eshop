@@ -45,9 +45,10 @@ public class RedisCache {
      * lua脚本，先获取指定产品的秒杀数量，再递减
      */
     private static final String DESC_LUA_SCRIPT = " local remain_num = redis.call('get', KEYS[1]); "
-//            + " if remain_num == nil then return nil; end; "
-            + " if ARGV[1] - remain_num > 0 then return -1; else "
-            + " return redis.call('decrby', KEYS[1], ARGV[1]); end; ";
+            + " if remain_num then "
+            + "     if remain_num - ARGV[1] >= 0 then return redis.call('decrby', KEYS[1], ARGV[1]); "
+            + "     else return -1; end; "
+            + " else return nil; end; ";
 
     /**
      * 使用Lua脚本来实现原子递减
@@ -62,13 +63,13 @@ public class RedisCache {
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptText(DESC_LUA_SCRIPT);
         redisScript.setResultType(Long.class);
-        Long remainNum = redisTemplate.execute(redisScript, Collections.singletonList(key), "" + value);
+        Long remainNum = redisTemplate.execute(redisScript, Collections.singletonList(key), value);
 
-        // 递减失败，缓存不存在值
+        // 缓存不存在值
         if (remainNum == null) {
             // 加锁，避免缓存没有秒杀数量时，大量访问数据库
             synchronized (LOCK) {
-                // double check
+                // double check，实现同一个部署实例只有一个线程从数据库加载一次即可
                 remainNum = getSecKillNum(productId);
                 if (remainNum == null) {
                     // 从数据库加载，如果数据库不存在，则返回-1
@@ -76,7 +77,7 @@ public class RedisCache {
                     if (remainNum == null) {
                         return -1;
                     }
-                    // 分布式锁，避免不同机器实例的并发设值问题
+                    // 分布式锁，避免不同机器实例的并发对Redis进行设值
                     final String lockKey = RedisLock.SECKILL_LOCK_PREFIX + productId;
                     final String lockValue = UUID.randomUUID().toString().replace("-", "");
                     try {
@@ -94,9 +95,8 @@ public class RedisCache {
                         redisLock.release(lockKey, lockValue);
                     }
                 }
-
                 // 递减
-                remainNum = redisTemplate.execute(redisScript, Collections.singletonList(key), "" + value);
+                remainNum = redisTemplate.execute(redisScript, Collections.singletonList(key), value);
             }
 
         }
@@ -113,7 +113,7 @@ public class RedisCache {
             BoundValueOperations<String, Object> valueOperations = redisTemplate.boundValueOps(SECKILL_NUMBER_KEY_PREFIX + productId);
             valueOperations.set(num);
         } catch (Exception e) {
-            logger.error("setSecKillNum {} {]", productId, num, e);
+            logger.error("setSecKillNum {} {}", productId, num, e);
         }
     }
 
@@ -126,7 +126,7 @@ public class RedisCache {
         try {
             BoundValueOperations<String, Object> valueOperations = redisTemplate.boundValueOps(SECKILL_NUMBER_KEY_PREFIX + productId);
             Object value = valueOperations.get();
-            return (Long)value;
+            return value==null ? null : Long.valueOf(value.toString());
         } catch (Exception e) {
             logger.error("getSecKillNum {}", productId, e);
         }
@@ -151,18 +151,18 @@ public class RedisCache {
 
     /**
      * 获取用户的抢购结果
-     * @param productId
+     * @param userId
      * @param orderUuid
      * @return
      */
-    public Integer getSeckillResult(long productId, String orderUuid) {
+    public Integer getSeckillResult(String userId, String orderUuid) {
         try {
             BoundHashOperations<String, String, Object> hashOperations =
-                    redisTemplate.boundHashOps(RedisConst.SECKILL_RESULT_KEY_PREFIX + productId);
+                    redisTemplate.boundHashOps(RedisConst.SECKILL_RESULT_KEY_PREFIX + userId);
             Object status = hashOperations.get(orderUuid);
             return (Integer)status;
         } catch (Exception e) {
-            logger.error("getSeckillResult {} {}", productId, orderUuid, e);
+            logger.error("getSeckillResult {} {}", userId, orderUuid, e);
         }
         return null;
     }

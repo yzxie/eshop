@@ -2,8 +2,8 @@ package com.yzxie.study.eshopapi.controller;
 
 import com.yzxie.study.eshopapi.controller.param.OrderRequest;
 import com.yzxie.study.eshopapi.controller.param.OrderStatusRequest;
-import com.yzxie.study.eshopapi.dto.OrderResult;
 import com.yzxie.study.eshopapi.service.OrderService;
+import com.yzxie.study.eshopcommon.dto.OrderResult;
 import com.yzxie.study.eshopcommon.result.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Description:
  **/
 @Controller
-@RequestMapping("/order")
-public class OrderController {
+@RequestMapping("/seckill")
+public class SecKillController {
 
     @Autowired
     private OrderService orderService;
@@ -27,14 +27,15 @@ public class OrderController {
     @RequestMapping("/create")
     @ResponseBody
     public ApiResponse create(@RequestBody OrderRequest orderRequest) {
-        OrderResult orderResult = orderService.createOrder(orderRequest.getProductId(), orderRequest.getUuid());
+        OrderResult orderResult = orderService.createOrder(orderRequest.getProductId(), orderRequest.getNum(),
+                orderRequest.getPrice(), orderRequest.getUserId());
         return ApiResponse.success(orderResult);
     }
 
     @RequestMapping("/check")
     @ResponseBody
     public ApiResponse checkOrder(@RequestBody OrderStatusRequest orderStatusRequest) {
-        OrderResult orderResult = orderService.checkOrderStatus(orderStatusRequest.getProductId(), orderStatusRequest.getOrderUuid());
+        OrderResult orderResult = orderService.checkOrderStatus(orderStatusRequest.getUserId(), orderStatusRequest.getOrderUuid());
         return ApiResponse.success(orderResult);
     }
 }

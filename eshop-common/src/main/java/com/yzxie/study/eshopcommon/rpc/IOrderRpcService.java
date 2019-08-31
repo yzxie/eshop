@@ -1,6 +1,6 @@
 package com.yzxie.study.eshopcommon.rpc;
 
-import com.yzxie.study.eshopcommon.dto.OrderStatus;
+import com.yzxie.study.eshopcommon.dto.OrderResult;
 
 /**
  * Author: xieyizun
@@ -13,16 +13,18 @@ public interface IOrderRpcService {
     /**
      * 发送订单到队列
      * @param productId
+     * @param num
+     * @param price
      * @param uuid
      * @return 订单id
      */
-    String sendOrderToMq(long productId, String uuid);
+    OrderResult sendOrderToMq(long productId, int num, double price, String uuid);
 
     /**
      * 检查订单的状态
-     * @param productId
+     * @param userId
      * @param orderUuid
      * @return
      */
-    int getOrderStatus(long productId, String orderUuid);
+    int getOrderStatus(String userId, String orderUuid);
 }

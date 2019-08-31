@@ -1,6 +1,6 @@
 package com.yzxie.study.eshopapi.service;
 
-import com.yzxie.study.eshopapi.dto.OrderResult;
+import com.yzxie.study.eshopcommon.dto.OrderResult;
 
 /**
  * Author: xieyizun
@@ -13,16 +13,18 @@ public interface OrderService {
     /**
      * 下单
      * @param productId
+     * @param num
+     * @param price
      * @param uuid
      * @return
      */
-    OrderResult createOrder(long productId, String uuid);
+    OrderResult createOrder(long productId, int num, double price, String uuid);
 
     /**
      * 检查订单的状态
-     * @param productId
+     * @param userId
      * @param orderUuId
      * @return
      */
-    OrderResult checkOrderStatus(long productId, String orderUuId);
+    OrderResult checkOrderStatus(String userId, String orderUuId);
 }

@@ -25,28 +25,18 @@ public class RedisCache {
     private RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * 递减库存数量
-     * @param productId
-     * @throws CacheException
-     */
-    public void decrProductQuantity(long productId) {
-        BoundValueOperations valueOperations = redisTemplate.boundValueOps(RedisConst.SECKILL_NUMBER_KEY_PREFIX + productId);
-        valueOperations.decrement();
-    }
-
-    /**
      * 设置抢购结果
-     * @param productId
-     * @param uuid
+     * @param userId
+     * @param orderUuid
      * @param orderStatus
      */
-    public void setSeckillResult(long productId, String uuid, OrderStatus orderStatus) {
+    public void setSeckillResult(String userId, String orderUuid, OrderStatus orderStatus) {
         try {
             BoundHashOperations<String, String, Object> hashOperations =
-                    redisTemplate.boundHashOps(RedisConst.SECKILL_RESULT_KEY_PREFIX + productId);
-            hashOperations.put(uuid, orderStatus.getStatus());
+                    redisTemplate.boundHashOps(RedisConst.SECKILL_RESULT_KEY_PREFIX + userId);
+            hashOperations.put(orderUuid, orderStatus.getStatus());
         } catch (Exception e) {
-            logger.error("setSeckillResult {} {} {}", productId, uuid, orderStatus.getStatus(), e);
+            logger.error("setSeckillResult {} {} {}", userId, orderStatus, orderStatus.getStatus(), e);
         }
     }
 }

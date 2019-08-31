@@ -1,7 +1,8 @@
 package com.yzxie.study.eshopcommon.bo;
 
 import lombok.Data;
-import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * Author: xieyizun
@@ -15,5 +16,5 @@ public class OrderBO {
     private String uuid;
     private String userId;
     private double cost;
-    private DateTime createTime;
+    private Date createTime;
 }

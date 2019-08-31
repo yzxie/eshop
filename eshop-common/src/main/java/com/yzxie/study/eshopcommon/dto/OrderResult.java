@@ -1,4 +1,4 @@
-package com.yzxie.study.eshopapi.dto;
+package com.yzxie.study.eshopcommon.dto;
 
 import lombok.Data;
 

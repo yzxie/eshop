@@ -12,5 +12,7 @@ import java.io.Serializable;
  **/
 @Data
 public class OrderItemDTO implements Serializable {
-
+    private long productId;
+    private int num;
+    private double price;
 }

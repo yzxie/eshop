@@ -13,5 +13,7 @@ import java.io.Serializable;
 @Data
 public class OrderRequest implements Serializable {
     private long productId;
-    private String uuid;
+    private double price;
+    private int num;
+    private String userId;
 }

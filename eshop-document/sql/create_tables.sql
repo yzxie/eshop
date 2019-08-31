@@ -37,17 +37,18 @@ create table t_order (
     user_id int not null comment '用户id',
     cost double not null comment '总金额',
     create_time datetime comment '创建时间',
-    primary key (id)
+    primary key (id),
+    key (uuid)
 ) ENGINE=InnoDB default charset=utf8 comment='订单';
 
 create table t_order_item (
     id int not null auto_increment comment 'id',
-    order_id int not null comment '所属订单id',
+    order_uuid varchar(32) not null comment '所属订单id',
     product_id int not null comment '产品id',
     price double not null comment '产品单价',
-    quantity int not null comment '产品数量',
+    num int not null comment '产品数量',
     create_time datetime comment '创建时间',
     primary key (id),
-    constraint `fk_order_id` foreign key (`order_id`)  references t_order(`id`)
+    constraint `fk_order_uuid` foreign key (`order_uuid`)  references t_order(`uuid`)
 ) engine=InnoDB default charset=utf8 comment='订单项';
 

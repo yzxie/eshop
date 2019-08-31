@@ -1,6 +1,7 @@
 package com.yzxie.study.eshopqueue.repository;
 
 import com.yzxie.study.eshopcommon.bo.OrderItemBO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface OrderItemDAO {
      * 批量插入订单项记录
      * @param orderItemBOList
      */
-    void bulkInsert(List<OrderItemBO> orderItemBOList);
+    void bulkInsert(@Param("orderItems") List<OrderItemBO> orderItemBOList);
 }

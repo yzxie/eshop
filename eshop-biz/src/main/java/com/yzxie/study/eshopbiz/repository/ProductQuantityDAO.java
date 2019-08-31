@@ -17,5 +17,5 @@ public interface ProductQuantityDAO {
      * @param productId
      * @return
      */
-    long getProductQuantity(@Param("productId") long productId);
+    Long getProductQuantity(@Param("productId") long productId);
 }

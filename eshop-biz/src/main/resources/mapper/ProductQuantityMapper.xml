@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yzxie.study.eshopbiz.repository.ProductQuantityDAO">
 
+    <select id="getProductQuantity" resultType="java.lang.Long">
+        select num from t_product_quantity where product_id=#{productId}
+    </select>
 </mapper>

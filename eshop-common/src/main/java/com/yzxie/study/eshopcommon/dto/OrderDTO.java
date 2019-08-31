@@ -14,7 +14,6 @@ import java.util.List;
 @Data
 public class OrderDTO implements Serializable {
     private String uuid;
-    private long productId;
     private String userId;
     private List<OrderItemDTO> orderItemDTOList;
 }

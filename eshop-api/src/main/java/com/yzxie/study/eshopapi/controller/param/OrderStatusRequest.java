@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Data
 public class OrderStatusRequest implements Serializable {
     private String orderUuid;
-    private long productId;
+    private String userId;
 }
