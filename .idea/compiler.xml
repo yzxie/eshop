@@ -7,10 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="eshop-queue" />
         <module name="eshop-common" />
-        <module name="eshop-test" />
+        <module name="eshop-queue" />
         <module name="eshop-api" />
+        <module name="eshop-test" />
         <module name="eshop-biz" />
       </profile>
     </annotationProcessing>

@@ -18,6 +18,7 @@ import static com.yzxie.study.eshopcommon.constant.OrderConst.ORDER_QUEUE;
  * Description:
  **/
 @Component
+// 队列监听器
 @RabbitListener(queues = ORDER_QUEUE)
 public class RabbitMqConsumer {
     private static final Logger logger = LoggerFactory.getLogger(RabbitMqConsumer.class);
@@ -25,6 +26,7 @@ public class RabbitMqConsumer {
     @Autowired
     private SeckillHandler seckillHandler;
 
+    // 队列消息处理器
     @RabbitHandler
     public void process(OrderDTO orderDTO) {
         seckillHandler.createOrder(orderDTO);

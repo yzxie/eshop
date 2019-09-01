@@ -60,12 +60,13 @@ public class RedisCache {
     public long descValueWithLua(String key, long value, long productId) {
         if (value <= 0)
             return -1;
+        // lua脚本原子更新库存数量
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptText(DESC_LUA_SCRIPT);
         redisScript.setResultType(Long.class);
         Long remainNum = redisTemplate.execute(redisScript, Collections.singletonList(key), value);
 
-        // 缓存不存在值
+        // 缓存不存在值，从数据库加载
         if (remainNum == null) {
             // 加锁，避免缓存没有秒杀数量时，大量访问数据库
             synchronized (LOCK) {
@@ -79,19 +80,26 @@ public class RedisCache {
                     }
                     // 分布式锁，避免不同机器实例的并发对Redis进行设值
                     final String lockKey = RedisLock.SECKILL_LOCK_PREFIX + productId;
+                    // 值value使用UUID生成随机值
                     final String lockValue = UUID.randomUUID().toString().replace("-", "");
                     try {
+                        // 加锁
                         boolean lock = redisLock.tryLock(lockKey, lockValue, 10);
                         if (lock) {
-                            // Redis单线程特性，
-                            // 此次会在后面的"递减"之前执行，
-                            // 如两个实例同时执行了tryLock方法，获取分布式锁失败的实例会执行到execute部分，不过也是在此操作之后的，
-                            // 故可以读取到此处的设值
-                            setSecKillNum(productId, remainNum);
+                            // double check检查
+                            remainNum = getSecKillNum(productId);
+                            if (remainNum == null) {
+                                // Redis单线程特性，
+                                // 此次会在后面的"递减"之前执行，
+                                // 如两个实例同时执行了tryLock方法，获取分布式锁失败的实例会执行到execute部分，不过也是在此操作之后的，
+                                // 故可以读取到此处的设值
+                                setSecKillNum(productId, remainNum);
+                            }
                         }
                     } catch (Exception e) {
                         logger.error("redis try lock error {}", productId, e);
                     } finally {
+                        // 解锁
                         redisLock.release(lockKey, lockValue);
                     }
                 }

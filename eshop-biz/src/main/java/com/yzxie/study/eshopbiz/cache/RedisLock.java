@@ -22,10 +22,13 @@ public class RedisLock {
     private static final Logger logger = LoggerFactory.getLogger(RedisLock.class);
 
     /**
-     * redis分布式锁的值，实现解锁由加锁的线程来实现
+     * redis分布式锁的值，实现解锁由加锁的线程来实现，使用本地缓存来减少对Redis的查询
      */
     private static final Map<String, String> LOCK_VALUE_MAP = new ConcurrentHashMap<>();
 
+    /**
+     * 秒杀分布式锁对应的键key的前戳
+     */
     public static final String SECKILL_LOCK_PREFIX = "seckill_redis_lock:";
 
     @Autowired
@@ -41,10 +44,11 @@ public class RedisLock {
     public boolean tryLock(String lockKey, String lockValue, long expireSeconds) {
         try {
             BoundValueOperations<String, Object> valueOperations = redisTemplate.boundValueOps(lockKey);
-            // setnx
+            // Redis的setnx命名
             // 利用Redis的单线程特性
             boolean success = valueOperations.setIfAbsent(lockValue);
             if (success) {
+                // 设置超时时间，避免死锁
                 valueOperations.expire(expireSeconds, TimeUnit.SECONDS);
                 LOCK_VALUE_MAP.put(lockKey, lockValue);
             }

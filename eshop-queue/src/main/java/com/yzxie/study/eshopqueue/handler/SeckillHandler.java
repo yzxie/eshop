@@ -54,7 +54,7 @@ public class SeckillHandler {
             transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    // 生成订单记录
+                    // 生成数据库订单记录
                     orderDAO.insert(orderBOListPair.getLeft());
                     List<OrderItemBO> orderItemBOList = orderBOListPair.getRight();
                     orderItemDAO.bulkInsert(orderItemBOList);
@@ -62,7 +62,7 @@ public class SeckillHandler {
                     for (OrderItemBO orderItemBO : orderItemBOList) {
                         productQuantityDAO.decrQuantity(orderItemBO.getNum());
                     }
-                    // 设置下单结果
+                    // 设置下单结果，以便客户端轮询获取
                     redisCache.setSeckillResult(orderDTO.getUserId(), orderDTO.getUuid(), OrderStatus.SUCCESS);
                 }
             });
