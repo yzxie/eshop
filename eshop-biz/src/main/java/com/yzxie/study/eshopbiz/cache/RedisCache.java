@@ -87,12 +87,8 @@ public class RedisCache {
                         boolean lock = redisLock.tryLock(lockKey, lockValue, 10);
                         if (lock) {
                             // double check检查
-                            remainNum = getSecKillNum(productId);
-                            if (remainNum == null) {
-                                // Redis单线程特性，
-                                // 此次会在后面的"递减"之前执行，
-                                // 如两个实例同时执行了tryLock方法，获取分布式锁失败的实例会执行到execute部分，不过也是在此操作之后的，
-                                // 故可以读取到此处的设值
+                            if (getSecKillNum(productId) == null) {
+                                // 初始化商品库存数量到Redis缓存
                                 setSecKillNum(productId, remainNum);
                             }
                         }
