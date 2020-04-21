@@ -43,10 +43,10 @@ public class RedisLock {
      */
     public boolean tryLock(String lockKey, String lockValue, long expireSeconds) {
         try {
-            BoundValueOperations<String, Object> valueOperations = redisTemplate.boundValueOps(lockKey);
             long startTime = System.currentTimeMillis();
             // 自旋直到获取锁成功或者等待超时
             for (;;) {
+                BoundValueOperations<String, Object> valueOperations = redisTemplate.boundValueOps(lockKey);
                 // Redis的setnx命名
                 // 利用Redis的单线程特性
                 boolean success = valueOperations.setIfAbsent(lockValue);
